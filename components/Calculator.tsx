@@ -2,6 +2,7 @@
 
 import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { formatZAR } from "../lib/format";
 
 function AnimatedNumber({
   value,
@@ -29,10 +30,6 @@ function AnimatedNumber({
       {suffix}
     </motion.span>
   );
-}
-
-function formatRand(value: number) {
-  return `R${Math.round(value).toLocaleString("en-ZA")}`;
 }
 
 export default function Calculator() {
@@ -73,7 +70,7 @@ export default function Calculator() {
                 className="w-full accent-vacayza-amber"
               />
               <p className="mt-2 text-xs uppercase tracking-[0.08em] text-vacayza-off-white">
-                {formatRand(rate)}
+                {formatZAR(rate)}
               </p>
             </label>
             <label className="block border-t border-[#333] pt-4">
@@ -105,7 +102,7 @@ export default function Calculator() {
                 className="w-full accent-vacayza-amber"
               />
               <p className="mt-2 text-xs uppercase tracking-[0.08em] text-vacayza-off-white">
-                {formatRand(purchasePrice)}
+                {formatZAR(purchasePrice)}
               </p>
             </label>
           </div>

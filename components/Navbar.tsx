@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -19,10 +20,13 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <a href="#" className="text-xs uppercase tracking-[0.2em] text-vacayza-off-white">
+        <Link href="/" className="text-xs uppercase tracking-[0.2em] text-vacayza-off-white">
           VACAYZA
-        </a>
+        </Link>
         <div className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.2em] text-vacayza-muted md:flex">
+          <Link href="/properties" className="hover:text-vacayza-off-white">
+            Properties
+          </Link>
           <a href="#how" className="hover:text-vacayza-off-white">
             How It Works
           </a>

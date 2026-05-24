@@ -5,9 +5,12 @@ import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
 import Navbar from "../components/Navbar";
+import FeaturedProperties from "../components/property/FeaturedProperties";
 import StatStrip from "../components/StatStrip";
 import Testimonials from "../components/Testimonials";
 import WhyCT from "../components/WhyCT";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
@@ -16,6 +19,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <StatStrip />
+      <FeaturedProperties />
       <HowItWorks />
       <Calculator />
       <WhyCT />

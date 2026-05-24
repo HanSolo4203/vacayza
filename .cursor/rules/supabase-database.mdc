@@ -1,0 +1,24 @@
+---
+description: Use Supabase MCP for database schema changes and SQL migrations
+globs: supabase/**/*.sql
+alwaysApply: false
+---
+
+# Supabase database changes (MCP)
+
+When editing `supabase/migrations/*.sql` or applying schema/RLS changes to the remote project:
+
+1. **Prefer MCP** (server: `supabase`):
+   - `list_tables` / `list_migrations` — inspect current state first
+   - `apply_migration` — DDL (CREATE TABLE, policies, indexes). Pass `name` in snake_case and full SQL `query`
+   - `execute_sql` — DML or one-off queries (not tracked as migrations)
+
+2. **Do not** paste TypeScript from `app/api/**/*.ts` into the SQL editor.
+
+3. **Keep repo in sync**: after a successful `apply_migration`, ensure the same SQL exists under `supabase/migrations/`.
+
+4. **Read-only mode**: MCP must **not** use `read_only=true` if migrations are needed. Project `.cursor/mcp.json` is configured for write access.
+
+5. If MCP returns privilege errors: re-authenticate in **Cursor Settings → Tools & MCP → Supabase**, or create a new [Personal Access Token](https://supabase.com/dashboard/account/tokens) with all scopes and set `SUPABASE_ACCESS_TOKEN` for the stdio server.
+
+Vacayza project ref: `oiwttbiwxgpughghtusk`

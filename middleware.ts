@@ -58,7 +58,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (pathname === "/coming-soon") {
+  if (
+    pathname === "/coming-soon" ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/properties")
+  ) {
     return NextResponse.next();
   }
 

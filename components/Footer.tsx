@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-vacayza-black px-6 py-10 md:px-12">
@@ -5,6 +7,9 @@ export default function Footer() {
         <div className="grid gap-8 text-[11px] uppercase tracking-[0.15em] text-vacayza-muted md:grid-cols-4">
           <div className="text-vacayza-off-white">VACAYZA</div>
           <div className="space-y-2">
+            <Link href="/properties" className="block hover:text-vacayza-off-white">
+              Properties
+            </Link>
             <a href="#how" className="block hover:text-vacayza-off-white">
               How It Works
             </a>

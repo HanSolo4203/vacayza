@@ -31,6 +31,12 @@ export default function ComingSoonView() {
         <p className="mt-10 text-xs uppercase tracking-[0.2em] text-vacayza-muted">
           Coming soon
         </p>
+        <a
+          href="/properties"
+          className="mt-8 inline-block text-xs uppercase tracking-[0.2em] text-vacayza-amber transition hover:underline"
+        >
+          Browse live investment listings →
+        </a>
       </div>
     </main>
   );
