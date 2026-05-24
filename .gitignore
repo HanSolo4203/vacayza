@@ -1,5 +1,6 @@
 .next
 node_modules
+node_modules.bak.*
 .env
 .env.local
 .env*.local
@@ -7,3 +8,6 @@ out
 dist
 coverage
 *.log
+.DS_Store
+tsconfig.tsbuildinfo
+.cursor/mcp.json
