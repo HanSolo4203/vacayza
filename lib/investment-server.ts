@@ -2,12 +2,14 @@ import { calculateInvestmentMetrics, type InvestmentMetricsOptions } from "./inv
 import { getMaintenanceReservePct } from "./app-settings";
 import { getMarketRates } from "./market-rates";
 import { resolveRsaProjectionForListing } from "./rsa-benchmarks";
+import type { RsaListingMatchInput } from "./rsa-property-match";
 import type { PropertyListingData } from "./types";
 
 export type InvestmentListingInput = Pick<
   PropertyListingData,
-  "price" | "bedrooms" | "suburb" | "levies" | "ratesAndTaxes" | "title" | "address" | "description"
-> & { rsaPropertyId?: string };
+  "price" | "bedrooms" | "suburb" | "levies" | "ratesAndTaxes"
+> &
+  Pick<RsaListingMatchInput, "title" | "address" | "description" | "rsaPropertyId">;
 
 export async function calculateInvestmentMetricsWithSettings(
   input: InvestmentListingInput,
