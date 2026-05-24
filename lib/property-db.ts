@@ -29,6 +29,8 @@ export interface PropertyRecord {
   vacayza_score: number | null;
   levies: number | null;
   rates_and_taxes: number | null;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export async function getPublishedProperties(): Promise<PropertyRecord[]> {

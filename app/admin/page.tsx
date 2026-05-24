@@ -9,6 +9,7 @@ import AdminIntakeList from "../../components/admin/AdminIntakeList";
 import AdminListingFields from "../../components/admin/AdminListingFields";
 import AdminMarketRates from "../../components/admin/AdminMarketRates";
 import AdminPhotoManager from "../../components/admin/AdminPhotoManager";
+import AdminMapLocation from "../../components/admin/AdminMapLocation";
 import AnimatedNumber from "../../components/AnimatedNumber";
 import { formatPercent, formatZAR } from "../../lib/format";
 import { DEFAULT_MAINTENANCE_RESERVE_PCT } from "../../lib/app-settings";
@@ -22,10 +23,14 @@ import {
   type MarketRatesTables,
 } from "../../lib/market-rates";
 import type { PropertyRecord } from "../../lib/property-db";
+import { sanitizeMapAddress } from "../../lib/street-address";
 import type { PropertyListingData } from "../../lib/types";
 
-type ScrapeStatus = "idle" | "fetching" | "parsing" | "calculating" | "ready" | "error";
+function withSanitizedMapAddress(data: PropertyListingData): PropertyListingData {
+  return { ...data, address: sanitizeMapAddress(data.address, data.title) };
+}
 
+type ScrapeStatus = "idle" | "fetching" | "parsing" | "calculating" | "ready" | "error";
 const inputClass =
   "w-full border border-[#333] bg-black p-3 font-mono text-xs uppercase tracking-[0.1em] text-vacayza-off-white outline-none focus:ring-1 focus:ring-vacayza-amber";
 
@@ -91,6 +96,7 @@ export default function AdminPage() {
   const [marketRates, setMarketRates] = useState<MarketRatesTables>(DEFAULT_MARKET_RATES);
   const [savingMarketRates, setSavingMarketRates] = useState(false);
   const [marketRatesError, setMarketRatesError] = useState("");
+  const [mapCoords, setMapCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [manualForm, setManualForm] = useState({
     price: "",
     bedrooms: "1",
@@ -219,6 +225,7 @@ export default function AdminPage() {
     setError("");
     setUrl("");
     setManualMode(false);
+    setMapCoords(null);
   }, []);
 
   const selectIntake = useCallback(async (id: string) => {
@@ -235,11 +242,16 @@ export default function AdminPage() {
         return;
       }
       setEditingId(id);
-      setData(applyMetrics(json.data, maintenanceReservePct));
+      setData(applyMetrics(withSanitizedMapAddress(json.data), maintenanceReservePct));
       setAgentNotes(json.property.agent_notes ?? "");
       setVacayzaScore(json.property.vacayza_score ?? 8);
       setPublishToggle(json.property.published ?? false);
       setUrl(json.property.source_url ?? "");
+      if (json.property.latitude != null && json.property.longitude != null) {
+        setMapCoords({ lat: json.property.latitude, lng: json.property.longitude });
+      } else {
+        setMapCoords(null);
+      }
     } catch {
       setSaveError("Failed to load intake.");
     }
@@ -278,7 +290,8 @@ export default function AdminPage() {
         return;
       }
 
-      setData(applyMetrics(json.data, maintenanceReservePct));
+      setData(applyMetrics(withSanitizedMapAddress(json.data), maintenanceReservePct));
+      setMapCoords(null);
       setStatus("ready");
       setManualMode(false);
 
@@ -377,7 +390,9 @@ export default function AdminPage() {
         return;
       }
       setSavedSlug(json.slug);
+      const propertyId = json.id ?? editingId;
       if (json.id) setEditingId(json.id);
+
       await loadIntakes();
     } catch {
       setSaveError("Failed to save listing.");
@@ -542,10 +557,11 @@ export default function AdminPage() {
                   className={inputClass}
                 />
                 <input
-                  placeholder="Address"
+                  placeholder="Street address (e.g. 16 Bree Street)"
                   value={manualForm.address}
                   onChange={(e) => setManualForm((f) => ({ ...f, address: e.target.value }))}
                   className={inputClass}
+                  autoComplete="street-address"
                 />
                 <select
                   value={manualForm.suburb}
@@ -603,6 +619,22 @@ export default function AdminPage() {
                 onChange={setData}
                 onRecalculate={handleRecalculate}
                 recalculating={recalculating}
+              />
+
+              <AdminMapLocation
+                propertySyncKey={editingId ?? data.sourceUrl}
+                address={data.address}
+                onAddressChange={(address) => setData({ ...data, address })}
+                propertyId={editingId}
+                propertyTitle={data.title}
+                price={data.price}
+                coords={mapCoords}
+                initialCoords={mapCoords}
+                onCoordsChange={setMapCoords}
+                onCoordsPersisted={(streetAddress) =>
+                  setData((prev) => (prev ? { ...prev, address: streetAddress } : prev))
+                }
+                publishEnabled={publishToggle}
               />
 
               <label className="block">

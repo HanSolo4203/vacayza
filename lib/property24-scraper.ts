@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 import { extractSuburbFromUrl, inferPropertyType, parsePrice } from "./investment";
 import { pickBestProperty24Url } from "./property24-images";
+import { isLikelyStreetAddress, sanitizeMapAddress } from "./street-address";
 import type { PropertyListingData } from "./types";
 
 type CheerioRoot = ReturnType<typeof cheerio.load>;
@@ -195,12 +196,15 @@ export function scrapeProperty24Listing(
 
   const price = extractListingPrice(html, $, overview);
 
-  let address = $(".p24_address").first().text().trim() || overview["Street Address"] || "";
-  if (!address && title.includes(" in ")) {
-    address = title.split(" in ").slice(1).join(" in ").trim();
-  }
-  if (!address) {
-    address = jsonLd?.about?.address?.addressLocality?.trim() || title;
+  const rawAddress =
+    $(".p24_address").first().text().trim() ||
+    overview["Street Address"] ||
+    overview["Address"] ||
+    "";
+  const locality = jsonLd?.about?.address?.addressLocality?.trim() ?? "";
+  let address = sanitizeMapAddress(rawAddress, title);
+  if (!address && locality && isLikelyStreetAddress(locality)) {
+    address = locality;
   }
 
   const bedrooms =

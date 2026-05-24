@@ -3,13 +3,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Footer from "../../../components/Footer";
 import Navbar from "../../../components/Navbar";
+import PropertyMapSection from "../../../components/property/PropertyMapSection";
 import PropertyContactForm from "../../../components/property/PropertyContactForm";
+import NearbyContextPills from "../../../components/property/NearbyContextPills";
 import PropertyGallery from "../../../components/property/PropertyGallery";
 import SeasonalChart from "../../../components/property/SeasonalChart";
 import VacayzaScoreRing from "../../../components/property/VacayzaScoreRing";
 import { formatPercent, formatSuburbLabel, formatZAR } from "../../../lib/format";
 import { calculateInvestmentMetricsWithSettings } from "../../../lib/investment-server";
 import { getPropertyBySlug } from "../../../lib/property-db";
+import { sanitizeMapAddress } from "../../../lib/street-address";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +87,9 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const isStrRecommended =
     property.recommendation === "STR" || property.recommendation === "STR-Preferred";
   const suburbLabel = property.suburb ? formatSuburbLabel(property.suburb) : "Cape Town";
+  const mapAddress = sanitizeMapAddress(property.address ?? "", property.title ?? undefined);
+  const hasMapPin = property.latitude != null && property.longitude != null;
+  const showLocation = Boolean(mapAddress || hasMapPin);
 
   return (
     <main className="bg-vacayza-black">
@@ -172,6 +178,29 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      {/* LOCATION */}
+      {showLocation && (
+        <section className="border-b border-[#222] px-6 py-20 md:px-12">
+          <div className="mx-auto max-w-7xl">
+            <p className="mb-6 text-[11px] uppercase tracking-[0.25em] text-vacayza-amber">— LOCATION</p>
+            <h2 className="mb-10 text-4xl italic text-vacayza-off-white md:text-5xl">Where it is.</h2>
+            {mapAddress && (
+              <p className="mb-6 text-xs uppercase tracking-[0.12em] text-vacayza-muted">{mapAddress}</p>
+            )}
+            <PropertyMapSection
+              address={mapAddress || property.address || ""}
+              latitude={property.latitude ?? null}
+              longitude={property.longitude ?? null}
+              propertyTitle={property.title ?? "Property"}
+              price={property.price ?? 0}
+              suburbDisplay={suburbLabel}
+              propertyId={property.id}
+            />
+            <NearbyContextPills suburb={property.suburb} />
+          </div>
+        </section>
+      )}
 
       {/* INVESTMENT PROJECTIONS */}
       {str && ltr && (

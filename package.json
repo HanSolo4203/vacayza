@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "rm -rf .next && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze-calendar": "node scripts/analyze-calendar.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -16,6 +18,7 @@
     "cheerio": "^1.2.0",
     "date-fns": "^4.3.0",
     "framer-motion": "^12.38.0",
+    "mapbox-gl": "^3.24.0",
     "next": "^15.5.18",
     "papaparse": "^5.5.3",
     "react": "^19.2.6",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
+    "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^22.19.18",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

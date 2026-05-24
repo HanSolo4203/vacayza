@@ -36,3 +36,97 @@ textarea {
 * {
   box-sizing: border-box;
 }
+
+.vacayza-popup .mapboxgl-popup-content {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vacayza-popup .mapboxgl-popup-tip {
+  border-top-color: #333;
+}
+
+.mapboxgl-ctrl-attrib {
+  background: rgba(10, 10, 10, 0.7) !important;
+  color: #666 !important;
+}
+
+.mapboxgl-ctrl-attrib a {
+  color: #666 !important;
+}
+
+/* Matrix map — scanlines + green UI chrome */
+.vacayza-map-matrix {
+  box-shadow:
+    inset 0 0 40px rgba(0, 255, 65, 0.06),
+    inset 0 0 80px rgba(0, 255, 65, 0.04);
+  animation: vacayza-matrix-map-glow 2.08s ease-in-out infinite;
+}
+
+@keyframes vacayza-matrix-map-glow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 32px rgba(0, 255, 65, 0.05),
+      inset 0 0 64px rgba(0, 255, 65, 0.03);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 48px rgba(0, 255, 65, 0.14),
+      inset 0 0 96px rgba(0, 255, 65, 0.08);
+  }
+}
+
+.vacayza-map-matrix::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.02) 2px,
+    rgba(0, 255, 65, 0.02) 4px
+  );
+  opacity: 0.3;
+}
+
+.vacayza-map-matrix::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(15, 31, 24, 0.28) 100%);
+}
+
+.vacayza-map-matrix .mapboxgl-ctrl-group button {
+  background-color: #000a04 !important;
+  border-color: #0a3320 !important;
+}
+
+.vacayza-map-matrix .mapboxgl-ctrl-group button:hover {
+  background-color: #001208 !important;
+}
+
+.vacayza-map-matrix .mapboxgl-ctrl-icon {
+  filter: invert(68%) sepia(79%) saturate(547%) hue-rotate(82deg) brightness(101%) contrast(104%);
+}
+
+.vacayza-map-matrix .mapboxgl-ctrl-attrib {
+  background: rgba(0, 10, 4, 0.85) !important;
+  color: #005020 !important;
+}
+
+.vacayza-map-matrix .mapboxgl-ctrl-attrib a {
+  color: #00ff41 !important;
+  opacity: 0.5;
+}
+
+.vacayza-popup .mapboxgl-popup-tip {
+  border-top-color: #00ff41;
+}

@@ -28,12 +28,6 @@ export default function AdminListingFields({
         onChange={(e) => set("title", e.target.value)}
         className={inputClass}
       />
-      <input
-        placeholder="Address"
-        value={data.address}
-        onChange={(e) => set("address", e.target.value)}
-        className={inputClass}
-      />
       <select value={data.suburb} onChange={(e) => set("suburb", e.target.value)} className={inputClass}>
         {SUBURBS.map((s) => (
           <option key={s.value} value={s.value}>
